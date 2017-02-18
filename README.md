@@ -1,48 +1,34 @@
-Boilerplate project
-===============
-This project is a ready-to use boilerplate for "It's not a bug, It's a feature" Java course.
+Multithreading HW2
+==================
 
-#### How-to use
+#### 1 Thread safe elements holder
 
-1. `git clone https://github.com/ChangeRequest/boilerplate-project.git name_of_new_project`
-2. `git remote remove origin`
-3. `git remote add origin https://github.com/new_repo/name_of_new_project.git`
-4. Update project name in `settings.gradle`
-5. Update `README.MD` to match newly created repository.
-6. Update Author name in `LICENSE` (if needed)
-7. Continue working in your new ready-to-use repository.
-
-####Already configured parts
-
-* Travis-CI configuration file
-* .gitignore file
-* build.gradle (already contains all needed imports)
-* License file with `Apache License Version 2.0`
-* empty package in src folder (`school.lemon.changerequest.java`)
-
-#### Travis-CI configuration
-* Oracle JDK 8
-* Install step: `gradlew clean assemble`
-* Check step: `gradlew check`
-
-#### .gitignore
-Already configured to ignore most of unwonted stuff:
-* eclipse ignores
-* IDEA ignores
-* Java and Groovy ignores
-* gradle and maven ignores
-* etc.
-
-#### build.gradle
-* group is `school.lemon.changerequest.java`
-* applied module from [gradle_common project]:
-  * commonModule
-  * javaModule
-  * testModule
-  * idea
-  * eclipse
-
-
+Implement interface **ElementsHolder**. 
+Your implementation should be thread safe.
+Use **ReadWriteLock** to provide possibility use any non modifying methods from many thread simultaneously.
   
-[gradle_common project]: https://github.com/ChangeRequest/gradle_common
+#### 2 Task Executor
 
+Implement TaskExecutor interface, class should be used for execution tasks in background.
+
+Every task class should implement Task interface. There should be two different tasks:
+
+* Copy File. Copies specified file to specified folder.
+* Search for files. Recursively search for files which in specified directory. Search criteria should be set via list of FileFilter instances.
+
+On task execution may occur exceptions. 
+If task failed the tries count for this task should be incremented and that task should be pushed back to the queue. 
+If task failed 5 times - task should nщt be added to the queue.
+
+Read javadocs for more information for each class.
+
+Implementation notes:
+* You should use **java.util.concurrent.ExecutorService** to execute tasks.
+* There should be 4 thread-workers.
+* **java.util.concurrent.ExecutorService** should use **PriorityBlockingQueue**.
+* Search tasks should have higher priority than copy tasks.
+
+Create Demo class that should: 
+* Create instance of TaskExecutor;
+* Add 3-4 tasks for coping very very big files and 15-20 tasks for finding files on disk in this queue;
+* Wait 1 minute and shutdown TaskExecutor.
